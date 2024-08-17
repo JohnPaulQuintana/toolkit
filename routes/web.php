@@ -1,0 +1,46 @@
+<?php
+
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AsyncRequestController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Route;
+
+
+
+
+Route::get('/', [AuthenticatedSessionController::class, 'create']);
+
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::group(['middleware' => ['auth', 'verified']], function () {
+
+    // Admin Routes
+    Route::group(['prefix' => 'admin', 'middleware' => ['role:admin'], 'as' => 'admin.'], function () {
+        Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+        Route::get('/request', [AdminController::class, 'requestAccount'])->name('request.account');
+        Route::get('/granted', [AdminController::class, 'grantedAccount'])->name('granted.account');
+        Route::put('/account-granted/{id}', [AdminController::class, 'setAccountAccess'])->name('granted.account.set');
+        Route::put('/account-decline/{id}', [AdminController::class, 'setAccountRemoveAccess'])->name('decline.account.set');
+
+        //async request
+        Route::get('/total-request', [AsyncRequestController::class, 'totalRequestAccount'])->name('request.account.count');
+    });
+
+    // User Routes
+    Route::group(['prefix' => 'user', 'middleware' => ['role:user'], 'as' => 'user.'], function () {
+        Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
+    });
+
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
