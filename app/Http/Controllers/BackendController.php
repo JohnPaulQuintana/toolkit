@@ -19,7 +19,8 @@ class BackendController extends Controller
         if ($response->successful()) {
             // dd($response->json());
             $data = $response->json();
-            return Redirect::route('admin.baji')->with(['result'=>$data]);
+            // return Redirect::route('admin.baji')->with(['result'=>$data]);
+            return response()->json(['result'=>$data]);
         } else {
             return response()->json(['error' => 'Failed to fetch data'], 500);
         }

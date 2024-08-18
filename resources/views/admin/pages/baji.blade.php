@@ -38,8 +38,8 @@
                     </div>
                     <div class="bg-slate-100 rounded-md p-2 flex flex-col">
                         <span class="font-bold text-slate-700">BDT - Currency</span>
-                        <a id="baji_automate" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                            href="{{ route(Auth::user()->role.'.test') }}">
+                        <a id="btd_automate" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                            >
                             <svg class="shrink-0 size-4 text-white" xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 512 512" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor">
                                 <!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/></svg>      
                             Automate
@@ -72,12 +72,12 @@
                     </div>
                     <div class="bg-slate-100 rounded-md p-2 flex flex-col">
                         <span class="font-bold text-slate-700">HKR - Currency</span>
-                        <a id="baji_automate" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                        <button id="hkr_automate" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
                             href="#">
                             <svg class="shrink-0 size-4 text-white" xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 512 512" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor">
                                 <!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M222.7 32.1c5 16.9-4.6 34.8-21.5 39.8C121.8 95.6 64 169.1 64 256c0 106 86 192 192 192s192-86 192-192c0-86.9-57.8-160.4-137.1-184.1c-16.9-5-26.6-22.9-21.5-39.8s22.9-26.6 39.8-21.5C434.9 42.1 512 140 512 256c0 141.4-114.6 256-256 256S0 397.4 0 256C0 140 77.1 42.1 182.9 10.6c16.9-5 34.8 4.6 39.8 21.5z"/></svg>      
                             Failed
-                        </a>
+                        </button>
                     </div>
                 </div>
 
@@ -90,8 +90,71 @@
         <script>
             console.log('connected baji...')
             $(document).ready(function(){
+                // Get CSRF token from meta tag
+                let csrfToken = $('meta[name="csrf-token"]').attr('content');
                 let response = @json(session('result'));
+                // let testRoute = "{{ Auth::user()->role }}.test"
                 console.log(response)
+
+                const popup = (status,title, text, icon, data) => {
+                    if(status !== null){
+                        let renderHtml = `<div>
+                                            <p><strong>${text}</strong></p>
+                                            <p>${data}</p>
+                                        </div>`
+                        Swal.fire({
+                            title: title,
+                            html: renderHtml,
+                            icon: icon
+                        });
+                    }
+                    
+                }
+
+                 // Async jQuery function with CSRF token
+                const asyncRequest = (url, method, data) => {
+                    return new Promise(function(resolve, reject) {
+                        $.ajax({
+                            url: url,
+                            method: method,
+                            data: data,
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken // Include CSRF token in the headers
+                            },
+                            success: function(response) {
+                                resolve(response); // Resolve the promise with the response data
+                            },
+                            error: function(xhr, status, error) {
+                                reject(error); // Reject the promise with the error
+                            }
+                        });
+                    });
+                }
+
+                // Connecting Request to a server
+                asyncRequest('http://127.0.0.1:8081/', 'GET','')
+                    .then(function(response) {
+                        // console.log(response)
+                        popup(response.status, response.title, response.text, response.icon, '')
+                    })
+                    .catch(function(error) {
+                        console.error('Error:', error);
+                    });
+
+
+            
+                // test for automating btd
+                $('#btd_automate').click(function(){
+                    asyncRequest(`/admin/test`, 'GET','')
+                        .then(function(response) {
+                            console.log(response.result)
+                            let result = response.result.data
+                            popup(result.status, result.title, result.text, result.icon, result.data)
+                        })
+                        .catch(function(error) {
+                            console.error('Error:', error);
+                        });
+                })
             })
         </script>
     @endsection

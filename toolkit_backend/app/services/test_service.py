@@ -12,5 +12,11 @@ class TestAutomation:
     def fetch_data(self):
         # Implement data fetching logic
         # Example: Fetch user data or posts from Facebook
-        data = {"message": "Fetched data from Facebook"}
+        data = {
+            "status": 200,
+            "text": "Data Fetched successfully",
+            "title": "Fetch Completed!",
+            "icon" : "success",
+            "data": [1,2,3,4,5,6,7,8],
+        }
         return data
