@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AsyncRequestController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\BackendController;
 use App\Http\Controllers\BajiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
@@ -30,6 +31,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
         // Baji Contoller
         Route::get('/baji', [BajiController::class, 'index'])->name('baji');
+
+        //send test rquest to backend
+        Route::get('/test',[BackendController::class, 'test'])->name('test');
         //async request
         Route::get('/total-request', [AsyncRequestController::class, 'totalRequestAccount'])->name('request.account.count');
     });
