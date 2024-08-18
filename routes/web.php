@@ -3,9 +3,11 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AsyncRequestController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\BajiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -26,6 +28,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::put('/account-granted/{id}', [AdminController::class, 'setAccountAccess'])->name('granted.account.set');
         Route::put('/account-decline/{id}', [AdminController::class, 'setAccountRemoveAccess'])->name('decline.account.set');
 
+        // Baji Contoller
+        Route::get('/baji', [BajiController::class, 'index'])->name('baji');
         //async request
         Route::get('/total-request', [AsyncRequestController::class, 'totalRequestAccount'])->name('request.account.count');
     });

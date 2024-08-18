@@ -23,7 +23,25 @@
                     
                     $(`#decline-account-form-${id}`).submit()
                 })
+
+                // view all (Temporary disbaled)
+                $('#grant_view_all').click(function(){
+                   popup('info','Temporarily Disabled!','This action is not available right now!','info')
+                })
+                // add user (Temporary disbaled)
+                $('#grant_add_user').click(function(){
+                   popup('info','Temporarily Disabled!','This action is not available right now!','info')
+                })
                
+                // searh on table by ip
+                $('#granted_search').on('input', function() {
+                    var searchQuery = $(this).val().toLowerCase();
+
+                    $('#granted_table tbody tr').filter(function() {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(searchQuery) > -1);
+                    });
+                });
+
                 const popup = (status,title, text, icon) => {
                     if(status !== null){
                         Swal.fire({

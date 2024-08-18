@@ -26,7 +26,7 @@ class AdminController extends Controller
             $query->where('status', 1); // Eager load only IPs with status 0
         }])
         ->latest()
-        ->paginate(5); // Adjust the number of items per page as needed
+        ->paginate(10); // Adjust the number of items per page as needed
 
         // Add initials and formatted date to each user
         $users->getCollection()->transform(function ($user) {
@@ -49,7 +49,7 @@ class AdminController extends Controller
             $query->where('status', 0); // Eager load only IPs with status 0
         }])
         ->latest()
-        ->paginate(5); // Adjust the number of items per page as needed
+        ->paginate(10); // Adjust the number of items per page as needed
 
         // Add initials and formatted date to each user
         $users->getCollection()->transform(function ($user) {

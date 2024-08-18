@@ -16,6 +16,24 @@
                 let text = @json(session('text'));
                 let icon = @json(session('icon'));
                
+                // view all (Temporary disbaled)
+                $('#request_view_all').click(function(){
+                   popup('info','Temporarily Disabled!','This action is not available right now!','info')
+                })
+                // add user (Temporary disbaled)
+                $('#request_add_user').click(function(){
+                   popup('info','Temporarily Disabled!','This action is not available right now!','info')
+                })
+               
+                // searh on table by ip
+                $('#request_search').on('input', function() {
+                    var searchQuery = $(this).val().toLowerCase();
+
+                    $('#request_table tbody tr').filter(function() {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(searchQuery) > -1);
+                    });
+                });
+
                 const popup = (status,title, text, icon) => {
                     if(status !== null){
                         Swal.fire({
